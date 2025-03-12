@@ -1,12 +1,12 @@
 /*
 
  Package: dyncall
- Library: dyncall
- File: dyncall/dyncall_call_ppc64.h
- Description: 
+ Library: portasm
+ File: portasm/portasm-arm.S
+ Description:
  License:
 
-   Copyright (c) 2014-2015 Masanori Mitsugi <mitsugi@linux.vnet.ibm.com>
+   Copyright (c) 2020 Bernhard Urban-Forster <beurba@microsoft.com>
 
    Permission to use, copy, modify, and distribute this software for any
    purpose with or without fee is hereby granted, provided that the above
@@ -23,36 +23,36 @@
 */
 
 
-#ifndef DYNCALL_PPC64_H
-#define DYNCALL_PPC64_H
 
-#include "dyncall_types.h"
+#define BEGIN_ASM
+#include "../autovar/autovar_OS.h"
 
-#ifdef __cplusplus
-extern "C" {
+#if defined(GEN_MASM)
+#define TEXTAREA AREA .text, CODE, ARM64
+#define ALIGN(X)
+#define LABELDEF(X) dcCall_arm64_##X
+#define LABELUSE(X) dcCall_arm64_##X
+#define END_PROC ENDP
+#define END_ASM END
+#define GLOBAL_C(X) EXPORT X
+#define ENTRY_C(X) X PROC
+
+#else
+
+#define TEXTAREA .text
+#define ALIGN(X) .align 2
+#define LABELDEF(X) .##X##:
+#define LABELUSE(X) .##X
+#define END_PROC
+#define END_ASM
+
+#if defined(OS_Darwin)
+#define GLOBAL_C(X) .globl _##X
+#define ENTRY_C(X) _##X:
+#else
+#define GLOBAL_C(X) .globl X
+#define ENTRY_C(X) X:
 #endif
 
-struct DCRegData_ppc64_
-{
-  DClonglong mIntData[8];
-  DCdouble   mFloatData[13];
-};
-
-/* 
-** PowerPC 64-bit calling convention call
-**
-** - hybrid return-type call (bool ... pointer)
-**
-*/
-
-void     dcCall_ppc64(DCpointer target, struct DCRegData_ppc64_* ppc64data, DCsize stksize, DCpointer stkdata);
-
-/* syscall */
-void     dcCall_ppc64_syscall(DCpointer target, struct DCRegData_ppc64_* ppc64data, DCsize stksize, DCpointer stkdata);
-
-#ifdef __cplusplus
-}
 #endif
-
-#endif /* DYNCALL_PPC64_H */
 

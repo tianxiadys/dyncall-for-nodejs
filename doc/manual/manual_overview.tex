@@ -153,7 +153,7 @@ that is currently unsupported. Gray cells are combinations that don't exist
 at the time of writing, or that are not taken into account.\\
 Light green cells mark complete feature support, as in dyncall and dyncallback. Dark green means basic support but lacking features (e.g. dyncall support, but not dyncallback).
 Please note that a green cell (even a light-green one) doesn't imply that all existing calling conventions/features/build tools are supported for that platform (but the most
-important). The rightmost column gives a brief info about calling convention support or other notes.
+important).
 For detailed info about a platform's support consult the calling convention appendix.
 
 
@@ -190,8 +190,8 @@ For detailed info about a platform's support consult the calling convention appe
 \hline%                           ^- find@@@   ^- dynOS     ^- real      ^- dynOS     ^- dynOS     ^- real/bbb  ^- checked   ^- checked   ^- checked   ^- new@@@   ^- new@@@     ^- checked   ^- checked
 \multirow{2}{*}{ARM64}     & EB & \marknotx  & \markunkn  & \marknotx  & \marknotx  & \marknotx  & \marknotx  & \marknotx  & \marknotx  & \marknotx  & \marknotx  & \marknotx  & \marknotx  & \marknotx \\%& \multirow{2}{*}{aapcs64, apple} \\
 \hhline{*{1}{|~}*{14}{|-}}%       ^- checked   ^- find@@@   ^- checked   ^- checked   ^- checked   ^- checked   ^- checked   ^- checked   ^- checked   ^- checked   ^- checked   ^- checked   ^- checked
-                           & EL & \markunkn  & \markcmpl  & \markcmpl  & \markcmpl  & \markunkn  & \markunkn  & \marknotx  & \marknotx  & \marknotx  & \marknotx  & \marknotx  & \marknotx  & \marknotx \\%& \\
-\hline%                           ^- find@@@   ^- find@@@   ^- checked   ^- checked   ^- find@@@   ^- find@@@   ^- checked   ^- checked   ^- checked   ^- checked   ^- checked   ^- checked   ^- checked
+                           & EL & \markcmpl  & \markcmpl  & \markcmpl  & \markcmpl  & \markunkn  & \markcmpl  & \marknotx  & \marknotx  & \marknotx  & \marknotx  & \marknotx  & \marknotx  & \marknotx \\%& \\
+\hline%                           ^- checked   ^- find@@@   ^- checked   ^- checked   ^- find@@@   ^- checked   ^- checked   ^- checked   ^- checked   ^- checked   ^- checked   ^- checked   ^- checked
 \multirow{2}{*}{MIPS}      & EB & \marknotx  & \markcmpl  & \marknotx  & \markcmpl  & \markunkn  & \marknotx  & \marknotx  & \marknotx  & \marknimp  & \marknotx  & \marknotx  & \marknotx  & \marknotx \\%& \multirow{2}{*}{o32 (hf \& sf), eabi (hf only)} \\
 \hhline{*{1}{|~}*{14}{|-}}%       ^- checked   ^- dynOS     ^- checked   ^- checked   ^- find@@@   ^- checked   ^- checked   ^- checked   ^- checked   ^- checked   ^- checked   ^- checked   ^- checked
                            & EL & \marknotx  & \markunkn  & \marknotx  & \markcmpl  & \markcmpl  & \markunkn  & \marknotx  & \marknotx  & \marknimp  & \marknotx  & \marknotx  & \markcmpl  & \marknotx \\%& \\
@@ -218,7 +218,7 @@ m88k                       &    & \marknotx  & \marknimp  & \marknotx  & \markno
 \hline
 x86                        &    & \markcmpl  & \markcmpl  & \markcmpl  & \markcmpl  & \markcmpl  & \markcmpl  & \markcmpl  & \markcmpl  & \markcmpl  & \markcmpl  & \markcmpl  & \marknotx  & \marknotx \\%& cdecl, stdcall, fastcall (MS \& GNU), thiscall (MS \& GNU), plan9 \\
 \hline
-x64                        &    & \markcmpl  & \markcmpl  & \markcmpl  & \markcmpl  & \markcmpl  & \markcmpl  & \markcmpl  & \markcmpl  & \marknimp  & \marknotx  & \marknotx  & \marknotx  & \marknotx \\%& ms, sysv\\
+x64                        &    & \markcmpl  & \markcmpl  & \markcmpl  & \markcmpl  & \markcmpl  & \markcmpl  & \markcmpl  & \markcmpl  & \marknimp  & \markcmpl  & \marknotx  & \marknotx  & \marknotx \\%& ms, sysv\\
 \hline
 Itanium                    &    & \marknimp  & \marknimp  & \marknotx  & \marknimp  & \marknimp  & \marknimp  & \marknotx  & \marknotx  & \marknotx  & \marknotx  & \marknotx  & \marknotx  & \marknotx \\%& \\
 \hline
