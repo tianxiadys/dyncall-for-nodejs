@@ -6,7 +6,7 @@
  Description: 
  License:
 
-   Copyright (c) 2011-2021 Daniel Adler <dadler@uni-goettingen.de>,
+   Copyright (c) 2011-2022 Daniel Adler <dadler@uni-goettingen.de>,
                            Tassilo Philipp <tphilipp@potion-studios.com>
 
    Permission to use, copy, modify, and distribute this software for any
@@ -24,7 +24,12 @@
 */
 
 #include "dyncall.h"
-#include <sys/syscall.h> 
+#if defined(DC__OS_Minix)
+#  include <minix/callnr.h>
+#  define SYS_write WRITE
+#elif defined(DC_UNIX) && !defined(DC__OS_BeOS)
+#  include <sys/syscall.h>
+#endif
 DCCallVM* callvm;
 
 
@@ -47,6 +52,7 @@ int main(int argc, char* argv[])
   {
   	r = syscall_write(1/*stdout*/, "result: syscall: ", 17);
   	r += syscall_write(1/*stdout*/, r==17?"1":"0", 2);
+  	r += syscall_write(1/*stdout*/, "\n", 2);
   }
   return !(r == 19);
 }

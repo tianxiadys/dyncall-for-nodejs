@@ -1,7 +1,66 @@
 This file lists bigger/noteworthy changes, only...
 
 
-Version 1.3 (upcoming)
+Version 1.4 (2022/12/06)
+
+dyncall:
+  o new, portable aggregate-by-value argument interface
+  o aggregate-by-value (struct, union) support for x64 (win and sysv; thanks Raphael Luba!)
+  o new aggregate description interface DCaggr replacing stale DCstruct (latter had shortcomings, was
+    mostly unused as it lacked stable implementations, didn't handle unions, ...)
+  o new calling convention modes for thiscalls (platform agnostic DC_CALL_C_DEFAULT_THIS, as well as
+    DC_CALL_C_X64_{WIN64,SYSV}_THIS (needed to handle C++ ABI rules for returning aggregates by value)
+  o new signature character for platform agnostic thiscalls ('*' / DC_SIGCHAR_CC_THISCALL)
+  o dcCallF(), dcVCallF(), dcArgF() and dcVArgF() don't implicitly call dcReset()
+    anymore, which was unflexible (breaking change)
+  o added macros to feature test implementation for aggregate-by-value and syscall support
+  o windows/x64/masm directives added to specify how stack unwinds (help for
+    debuggers, exception handling, etc.; thanks Raphael Luba!)
+  o fixed detection of native thiscall callconv for builds not using MSVC but using (or adhering to)
+    the MSVC runtime (e.g. ReactOS' MinGW based RosBE)
+  o BSD syscall segfault fix
+dyncallback:
+  o new, portable aggregate-by-value callback argument interface
+  o aggregate-by-value (struct, union) support for x64 (win and sysv; thanks Raphael Luba!)
+  o x64/windows masm directives for frame unwinding information (as dbg help; thanks Raphael Luba!)
+  o sparc64 callback crash fix
+dynload:
+  o build fix for ReactOS with RosBE/cmake/mingw-make environment
+general:
+  o more robust detection of platform endianness (on some platforms inclusion
+    of endian.h led to wrong assumptions)
+tests:
+  o call_suite: simplified and extended to test also unsigned types, and _Bool
+  o callback_suite: refactored to be much more like call_suite test
+  o call_suite_aggrs: new test suite for calls with aggregate arguments and
+    return types (structs, unions and arrays as aggregate members)
+  o callback_suite_aggrs: new test suite, like call_suite_aggrs but for callbacks
+  o plain: added some aggregate-as-vararg-by-value tests
+  o plain_c++: added non-trivial C++ aggregate tests
+  o callback_plain_c++: new test, focusing on methods and non-trivial C++ aggregates
+  o simplifications and major refactoring to share more code (especially
+    signature and case generator) across test suites
+  o dynload_plain: simplified build and robustness fixes on some platforms
+buildsys:
+  o ./configure output for sun make builds: set correct C++ compiler flag var
+  o ./configure for SunOS now uses isainfo(1) to deduce native instruction set
+  o added explicit arm64 target, and clang tool options to Windows' configure.bat
+  o configure.{bat,rc} now writing Makefile.config, for consistency/compatibility (e.g. configure.bat
+    can now be used to set up env flags for a non-nmake toolchain)
+  o simplified/decluttered Windows and Plan9 configure scripts (removal of unused/stale options, ...)
+doc:
+  o callconv section additions about aggregate-by-value passing for all platforms
+  o new Linux-Std-Base-specific PPC32/SysV section, as aggregate retval handling differs from
+    default SysV for such systems
+  o man page changes/additions to document new aggregate interfaces
+  o added many more usage examples to man pages
+  o replaced API description in manual with references to the manpages, to
+    avoid duplication and keeping things in sync
+  o general clarifications and cleanup, adding missing definitions to man
+    pages, ...
+
+
+Version 1.3 (2021/12/17)
 
   o introduced version macro (see dyncall/dyncall_version.h)
 dyncall:
@@ -213,7 +272,7 @@ architecture:
   o added subproject: autovar - predefined macro framework (was dyncall_macros.h)
   o added support for Solaris and SunPro compiler for i386, x86_64, sparc and sparc64
   o improved auto-detection via preprocessor defines
-dyncall updates:
+dyncall:
   o uses portasm (GNU,Apple,Microsoft) common sources for x86,x64,ppc32,arm32_arm
   o added support for sparc (32-bit) (tested on linux/debian,openbsd,solaris)
   o added support for sparc (64-bit) (tested on linux/debian,openbsd,solaris)
@@ -228,13 +287,13 @@ dyncall updates:
   o bug fix for ppc32/sysv: ellipsis calls work now
   o updated API, introduced DC_CALL_C_ELLIPSIS_VARARGS
   o changed interface: dcMode does not reset internally anymore
-dyncallback updates:
+dyncallback:
   o uses portasm for x86,x64
   o added Solaris/x86/sunpro port (stable)
   o added Minix port (unstable)
   o callback support for Darwin/ppc32
   o updates source, uses relative includes
-dynload updates:
+dynload:
   o fixes for missing includes (dyncall_alloc.h)
   o fixes for self-resolving symbols on windows
   o removed Dbghelf.lib dependency
@@ -264,7 +323,7 @@ buildsys/cmake updates:
   o fixes for universal builds on Mac OS X
   o supports SunPro with *.S files.
   o added experimental 'dynMake' portable make-based build-system (not stable, yet)
-documentation updates:
+doc:
   o added dyncallback documentation
   o updated dyncall documentation
   o minor updates
@@ -272,21 +331,20 @@ tests:
   o added flexible test suite for calls (call_suite) based on Lua and C
   o added syscall test
   o updates to resolve-self test (adding additional link flags to export symbols)
-  o improved dir name portability (renamed plain_c++ -> plain_cxx)
   o renamed *.cpp -> *.cc files (OpenBSD/Sun make has no implicit rules for cpp)
 
 
 Version 0.6 (2010/09/25)
 
-building:
+buildsys:
   o new build systems: CMake and Plan9's mk
   o buildsys/gmake tool chain update: pcc and iphone sdk
   o x64 bugfix: added "-fPIC" even for static libs
-dynload updates:
+dynload:
   o enum symbols update: Mach-O and Win64 (thanks Olivier)
   o numerous convenience changes to dynload interface (thanks Olivier)
   o added support for resolving application images itself
-dyncall updates:
+dyncall:
   o new platform support: arm/iphone (armv6), x86/Plan9
   o new MIPS calling conventions: o32, n64 (both endian models)
   o cleanup: unexported functions in MASM files, b/c export not needed (thanks Olivier)
@@ -321,7 +379,7 @@ Version 0.4 (2009/07/06)
     target "config" modified, phony without dependencies to other builds
   o bugfix: GNU fastcall calling convention for float and double arguments was wrong (no skip of register)
   o update: x86win32* suite tests are built on cygwin now, added total result output
-  o signature types change:
+  o signature char (breaking) changes:
     C Strings: 'S' -> 'Z'
     long: 'l' -> 'j'
     long long: 'L' -> 'l'
